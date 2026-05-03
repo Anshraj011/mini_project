@@ -7,41 +7,47 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
-  <div class="app-layout">
-    <!-- Sidebar (Desktop) -->
-    <aside class="sidebar" id="sidebar"></aside>
+<body class="app-body">
+  <div class="app-layout" data-app-shell>
+    <input type="checkbox" id="sidebar-rail-toggle" class="sidebar-rail-input u-visually-hidden" aria-label="Toggle compact sidebar">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation"></aside>
 
     <div class="main-wrapper">
-      <!-- Top Header -->
-      <header class="top-header">
-        <div class="header-search">
-          <i data-lucide="search"></i>
-          <input type="text" placeholder="Search visitors or employees..." id="globalSearch">
+      <header class="top-header" role="banner">
+        <div class="top-header__start">
+          <label for="sidebar-rail-toggle" class="sidebar-rail-trigger u-desktop-only" title="Compact sidebar">
+            <span class="sidebar-rail-trigger__icon" aria-hidden="true"><i data-lucide="panel-left-close"></i></span>
+          </label>
+          <div class="header-search" role="search">
+            <i data-lucide="search" class="header-search__icon" aria-hidden="true"></i>
+            <input type="search" id="globalSearch" placeholder="Search visitors or employees..." autocomplete="off" aria-label="Global search">
+          </div>
         </div>
-        <div class="header-actions">
-          <button class="icon-btn" onclick="toast('No new notifications')"><i data-lucide="bell"></i></button>
-          <div class="avatar" id="headerAvatar">U</div>
+        <div class="top-header__end">
+          <button type="button" class="icon-btn icon-btn--header" onclick="toast('No new notifications')" aria-label="Notifications" title="Notifications">
+            <i data-lucide="bell" aria-hidden="true"></i>
+          </button>
+          <div class="header-profile">
+            <div class="avatar avatar--header" id="headerAvatar" title="Profile">U</div>
+          </div>
         </div>
       </header>
 
-      <!-- Main Content -->
-      <main class="main-content" id="mainContent">
-        <!-- Page content injected here -->
-      </main>
-      
-      <!-- Mobile Bottom Navigation -->
-      <nav class="mobile-nav" id="mobileNav"></nav>
+      <main class="main-content" id="mainContent" role="main"></main>
+
+      <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation"></nav>
     </div>
   </div>
 
-  <div class="toast-container" id="toastContainer"></div>
-  
-  <div id="modalOverlay" class="modal-overlay">
-    <div class="modal">
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-relevant="additions"></div>
+
+  <div id="modalOverlay" class="modal-overlay" role="presentation">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="modal-header">
         <h3 class="modal-title" id="modalTitle"></h3>
-        <button class="btn btn-ghost btn-icon" onclick="closeModal()"><i data-lucide="x"></i></button>
+        <button type="button" class="icon-btn icon-btn--ghost" onclick="closeModal()" aria-label="Close dialog">
+          <i data-lucide="x" aria-hidden="true"></i>
+        </button>
       </div>
       <div id="modalBody" class="modal-body"></div>
     </div>
