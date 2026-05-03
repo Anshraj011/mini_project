@@ -671,7 +671,7 @@ async function renderGuardHome(el) {
       </div>
     </div>
 
-    <div class="grid gap-4" style="grid-template-columns:repeat(3,1fr);margin-bottom:1.5rem" id="guardStats"></div>
+    <div class="grid grid-3 gap-4" style="margin-bottom:1.5rem" id="guardStats"></div>
 
     <div class="card terminal-card" style="margin-bottom:1.5rem; border-left: 4px solid var(--primary);">
       <div class="card-header"><span class="card-title">Quick Search</span><span class="text-muted text-xs">Lookup visitor by name, email or phone</span></div>
