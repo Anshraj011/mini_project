@@ -297,7 +297,14 @@ async function viewBadge(id) {
           ${v.photoUrl ? `<img src="${v.photoUrl}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--border-strong)">` 
                        : `<div class="avatar" style="width:64px;height:64px;font-size:1.5rem">${v.fullName.charAt(0)}</div>`}
           <div><h3 class="font-bold text-lg" style="margin-bottom:0.25rem">${v.fullName}</h3><div class="text-sm text-muted">${v.company || 'Visitor'}</div></div>
-          <div style="margin-left:auto">${statusBadge(v.status)}</div>
+          <div style="margin-left:auto; display:flex; flex-direction:column; align-items:flex-end; gap:0.5rem">
+            ${statusBadge(v.status)}
+            ${v.qrCodeUrl && (v.status === 'PRE_APPROVED' || v.status === 'APPROVED' || v.status === 'CHECKED_IN') ? `
+              <button class="btn btn-secondary btn-xs" onclick="window.print()">
+                <i data-lucide="printer" style="width:12px;height:12px"></i> Print Pass
+              </button>
+            ` : ''}
+          </div>
         </div>
         
         ${v.qrCodeUrl && (v.status === 'PRE_APPROVED' || v.status === 'APPROVED' || v.status === 'CHECKED_IN') ? renderDigitalPassCard(v) : ''}
@@ -1095,7 +1102,14 @@ async function renderVisitorHome(el) {
             <div><div class="text-dim text-xs" style="margin-bottom:0.2rem">DEPARTURE</div><div>${fmtDate(v.visitEndTime)}</div></div>
           </div>
 
-          ${hasPass && v.qrCodeUrl ? renderDigitalPassCard(v) : ''}
+          ${hasPass && v.qrCodeUrl ? `
+            <div class="flex justify-end mb-4">
+              <button class="btn btn-secondary btn-sm" onclick="window.print()">
+                <i data-lucide="printer" style="width:14px;height:14px"></i> Print Pass
+              </button>
+            </div>
+            ${renderDigitalPassCard(v)}
+          ` : ''}
 
           ${isPending ? `
             <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:rgba(234,179,8,0.08);border-radius:var(--radius-md);border:1px solid rgba(234,179,8,0.2)">

@@ -15,6 +15,9 @@ public class NotificationService {
 
     private final JavaMailSender mailSender;
 
+    @org.springframework.beans.factory.annotation.Value("${spring.mail.properties.mail.smtp.from:}")
+    private String fromEmail;
+
     @Async
     public void sendOtpEmail(String to, String otp) {
         log.info("Preparing to send OTP to: {}", to);
@@ -24,6 +27,7 @@ public class NotificationService {
         
         try {
             SimpleMailMessage message = new SimpleMailMessage();
+            if (fromEmail != null && !fromEmail.isEmpty()) message.setFrom(fromEmail);
             message.setTo(to);
             message.setSubject(subject);
             message.setText(body);
@@ -42,6 +46,7 @@ public class NotificationService {
         log.info("Sending email to: {}", to);
         try {
             SimpleMailMessage message = new SimpleMailMessage();
+            if (fromEmail != null && !fromEmail.isEmpty()) message.setFrom(fromEmail);
             message.setTo(to);
             message.setSubject(subject);
             message.setText(body);
