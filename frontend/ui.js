@@ -117,10 +117,9 @@ function buildSidebar(role, activePage) {
     { id: 'visitors', icon: 'users', label: 'My Visitors' },
     { id: 'register', icon: 'user-plus', label: 'Register Visitor' }
   ], SECURITY_GUARD: [
-    { id: 'guard-home', icon: 'shield-check', label: 'Security Portal' },
+    { id: 'guard-home', icon: 'shield-check', label: 'Security Terminal' },
     { id: 'guard-scan', icon: 'scan-line',    label: 'Scan QR Code' },
-    { id: 'register',   icon: 'user-plus',    label: 'Register Walk-in' },
-    { id: 'visitors',   icon: 'list',          label: 'Visitor Log' }
+    { id: 'register',   icon: 'user-plus',    label: 'Register Walk-in' }
   ], ROLE_VISITOR: [
     { id: 'visitor-home', icon: 'ticket', label: 'My Requests' }
   ]};

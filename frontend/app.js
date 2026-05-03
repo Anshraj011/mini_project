@@ -317,9 +317,14 @@ async function viewBadge(id) {
    REGISTER VISITOR
    ═══════════════════════════════════════════════════════════ */
 function renderRegister(el) {
+  const role = Auth.getRole();
+  const isGuard = role === 'SECURITY_GUARD';
+  const title = isGuard ? 'Register Walk-in' : 'Register Visitor';
+  const subtitle = isGuard ? 'Process a visitor arriving without a pre-approval' : 'Add a new guest to the facility';
+  
   el.innerHTML = `
     <div class="page-header">
-      <div><h2 class="page-title">Register Visitor</h2><p class="page-subtitle">Add a new guest to the facility</p></div>
+      <div><h2 class="page-title">${title}</h2><p class="page-subtitle">${subtitle}</p></div>
     </div>
     
     <div class="card" style="max-width:800px;">
@@ -671,9 +676,9 @@ async function renderGuardHome(el) {
       </div>
     </div>
 
-    <div class="grid grid-3 gap-4" style="margin-bottom:1.5rem" id="guardStats"></div>
+    <div class="grid grid-4 gap-4 mb-6" id="guardStats"></div>
 
-    <div class="card terminal-card" style="margin-bottom:1.5rem; border-left: 4px solid var(--primary);">
+    <div class="card terminal-card mb-6">
       <div class="card-header"><span class="card-title">Quick Search</span><span class="text-muted text-xs">Lookup visitor by name, email or phone</span></div>
       <div class="flex gap-3" style="padding:0.5rem 0 1rem">
         <div class="header-search terminal-search" style="flex:1">
@@ -685,21 +690,28 @@ async function renderGuardHome(el) {
       <div id="guardSearchResults"></div>
     </div>
 
-    <div class="grid grid-2 gap-6">
+    <div class="grid grid-2 gap-6 mb-6">
       <div class="card terminal-list-card">
         <div class="card-header" style="background:var(--bg-surface-raised)">
-          <div class="flex items-center gap-2"><i data-lucide="calendar-clock" class="text-warning"></i><span class="card-title">Expected Today</span></div>
+          <div class="flex items-center gap-2"><i data-lucide="calendar-clock" class="text-warning"></i><span class="card-title">Expected Arrivals</span></div>
           <span class="badge badge-warning" id="expectedCount">0</span>
         </div>
         <div id="guardExpected" class="flex-col gap-2" style="padding:0.5rem"></div>
       </div>
       <div class="card terminal-list-card">
         <div class="card-header" style="background:var(--bg-surface-raised)">
-          <div class="flex items-center gap-2"><i data-lucide="home" class="text-info"></i><span class="card-title">Active Visitors</span></div>
+          <div class="flex items-center gap-2"><i data-lucide="home" class="text-info"></i><span class="card-title">On Premises</span></div>
           <span class="badge badge-info" id="checkedInCount">0</span>
         </div>
         <div id="guardCheckedIn" class="flex-col gap-2" style="padding:0.5rem"></div>
       </div>
+    </div>
+
+    <div class="card terminal-list-card">
+      <div class="card-header" style="background:var(--bg-surface-raised)">
+        <div class="flex items-center gap-2"><i data-lucide="history" class="text-secondary"></i><span class="card-title">Recent Gate Activity Log</span></div>
+      </div>
+      <div id="guardGateLog" class="flex-col" style="padding:0.5rem"></div>
     </div>`;
 
   lucide.createIcons({ root: el });
@@ -728,23 +740,57 @@ async function renderGuardHome(el) {
     }
 
     // Stats
+    const totalToday = list.filter(v => fmtDate(v.createdAt).split(' · ')[0] === fmtDate(new Date()).split(' · ')[0]).length;
     const pending = list.filter(v => v.status === 'PENDING');
+    const checkedOut = list.filter(v => v.status === 'CHECKED_OUT');
+    
     safeSetHTML('guardStats', `
       <div class="stat-card">
-        <div class="stat-icon" style="background:rgba(99,102,241,0.12);color:#6366f1"><i data-lucide="calendar-check" style="width:18px;height:18px"></i></div>
-        <div class="stat-value">${expected.length}</div>
-        <div class="stat-label">Expected Today</div>
+        <div class="stat-icon" style="background:rgba(99,102,241,0.12);color:#6366f1"><i data-lucide="users" style="width:18px;height:18px"></i></div>
+        <div class="stat-value">${totalToday}</div>
+        <div class="stat-label">Total Today</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon" style="background:rgba(34,197,94,0.12);color:#22c55e"><i data-lucide="user-check" style="width:18px;height:18px"></i></div>
+        <div class="stat-icon" style="background:rgba(34,197,94,0.12);color:#22c55e"><i data-lucide="log-in" style="width:18px;height:18px"></i></div>
         <div class="stat-value">${checkedIn.length}</div>
-        <div class="stat-label">On Premises</div>
+        <div class="stat-label">Checked In</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon" style="background:rgba(234,179,8,0.12);color:#eab308"><i data-lucide="clock" style="width:18px;height:18px"></i></div>
+        <div class="stat-icon" style="background:rgba(234,179,8,0.12);color:#eab308"><i data-lucide="log-out" style="width:18px;height:18px"></i></div>
+        <div class="stat-value">${checkedOut.length}</div>
+        <div class="stat-label">Checked Out</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(248,81,73,0.12);color:#f85149"><i data-lucide="clock" style="width:18px;height:18px"></i></div>
         <div class="stat-value">${pending.length}</div>
-        <div class="stat-label">Pending Approval</div>
+        <div class="stat-label">Pending</div>
       </div>`);
+
+    // Gate Log (Recent movements)
+    const logContainer = document.getElementById('guardGateLog');
+    const recentActivity = list
+      .filter(v => v.checkInTime || v.checkOutTime)
+      .sort((a,b) => new Date(b.checkOutTime || b.checkInTime) - new Date(a.checkOutTime || a.checkInTime))
+      .slice(0, 10);
+
+    if (recentActivity.length === 0) {
+      logContainer.innerHTML = '<p class="text-sm text-muted" style="padding:0.5rem">No recent gate activity.</p>';
+    } else {
+      logContainer.innerHTML = `<table>
+        <thead><tr><th>Time</th><th>Visitor</th><th>Event</th><th>Action By</th></tr></thead>
+        <tbody>${recentActivity.map(v => {
+          const isOut = !!v.checkOutTime;
+          const time = isOut ? v.checkOutTime : v.checkInTime;
+          const event = isOut ? '<span class="badge badge-neutral">Checked Out</span>' : '<span class="badge badge-info">Checked In</span>';
+          return `<tr>
+            <td class="text-xs font-mono">${fmtDate(time).split(' · ')[1]}</td>
+            <td><div class="font-medium text-sm">${v.fullName}</div></td>
+            <td>${event}</td>
+            <td class="text-xs text-muted">Gate Staff</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>`;
+    }
 
     document.getElementById('expectedCount').textContent = expected.length;
     document.getElementById('checkedInCount').textContent = checkedIn.length;
