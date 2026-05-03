@@ -14,6 +14,7 @@ This app deploys as one Spring Boot web service. The frontend in `frontend/` is 
    - `CLOUDINARY_CLOUD_NAME`
    - `CLOUDINARY_API_KEY`
    - `CLOUDINARY_API_SECRET`
+   - `SENDGRID_API_KEY`
 4. Deploy the service.
 
 On startup, the app removes old demo users such as `admin`, `guard1`, and the sample employees, then creates or updates the admin account as `Ansh` / `Ansh@2004`.
