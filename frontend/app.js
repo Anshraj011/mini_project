@@ -489,8 +489,8 @@ function filterAndRenderEmployees() {
         <span class="badge badge-neutral">${e.department||'General'}</span>
       </div>
       <div class="emp-card__actions">
-        <button type="button" class="icon-btn icon-btn--surface" onclick="openEditEmployeeModal('${e.id}')" title="Edit employee" aria-label="Edit"><i data-lucide="pencil"></i></button>
-        <button type="button" class="icon-btn icon-btn--danger" onclick="deleteEmployee('${e.id}','${(e.name||'').replace(/'/g, "\\'")}')" title="Delete employee" aria-label="Delete"><i data-lucide="trash-2"></i></button>
+        <button type="button" class="icon-btn icon-btn--surface" onclick="openEditEmployeeModal('${e.id}')" title="Edit employee" aria-label="Edit"><i data-lucide="edit-2"></i></button>
+        <button type="button" class="icon-btn icon-btn--danger" onclick="deleteEmployee('${e.id}','${String(e.name||'').replace(/\\/g,'\\\\').replace(/'/g, "\\'")}')" title="Delete employee" aria-label="Delete"><i data-lucide="trash-2"></i></button>
       </div>
     </article>`).join('');
 
