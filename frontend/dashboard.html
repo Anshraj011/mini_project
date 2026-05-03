@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>VMS Dashboard</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <div class="app-layout">
-    <!-- Sidebar -->
+    <!-- Sidebar (Desktop) -->
     <aside class="sidebar" id="sidebar"></aside>
 
     <div class="main-wrapper">
@@ -29,6 +29,9 @@
       <main class="main-content" id="mainContent">
         <!-- Page content injected here -->
       </main>
+      
+      <!-- Mobile Bottom Navigation -->
+      <nav class="mobile-nav" id="mobileNav"></nav>
     </div>
   </div>
 
@@ -38,7 +41,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3 class="modal-title" id="modalTitle"></h3>
-        <button class="icon-btn" onclick="closeModal()"><i data-lucide="x"></i></button>
+        <button class="btn btn-ghost btn-icon" onclick="closeModal()"><i data-lucide="x"></i></button>
       </div>
       <div id="modalBody" class="modal-body"></div>
     </div>

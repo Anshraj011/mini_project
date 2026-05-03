@@ -224,17 +224,17 @@ function filterAndRenderVisitors() {
     let viewBtn = `<button class="btn btn-ghost btn-icon" onclick="viewBadge('${v.id}')" title="Details"><i data-lucide="more-horizontal"></i></button>`;
 
     return `<tr>
-      <td>
+      <td data-label="Visitor">
         <div class="flex items-center gap-3">
           <div class="avatar">${v.fullName.charAt(0)}</div>
           <div><div class="font-medium">${v.fullName}</div><div class="text-xs text-muted">${v.email || v.company || '—'}</div></div>
         </div>
       </td>
-      <td><div class="text-sm">${v.registeredBy || v.hostName || '—'}</div></td>
-      <td><div class="text-sm">${v.purposeOfVisit}</div></td>
-      <td>${statusBadge(v.status)}</td>
-      <td><div class="text-sm text-muted">${fmtDate(v.expectedVisitTime)}</div></td>
-      <td><div class="flex items-center gap-2">${actions}${viewBtn}</div></td></tr>`;
+      <td data-label="Host"><div class="text-sm">${v.registeredBy || v.hostName || '—'}</div></td>
+      <td data-label="Purpose"><div class="text-sm">${v.purposeOfVisit}</div></td>
+      <td data-label="Status">${statusBadge(v.status)}</td>
+      <td data-label="Expected"><div class="text-sm text-muted">${fmtDate(v.expectedVisitTime)}</div></td>
+      <td data-label="Actions"><div class="flex items-center gap-2">${actions}${viewBtn}</div></td></tr>`;
   }).join('');
 
   safeSetHTML('visitorsTable', data.length === 0
@@ -469,15 +469,15 @@ function filterAndRenderEmployees() {
 
   const { data, page, total } = paginate(filtered, empPage, 10);
   const tbody = data.map(e => `<tr>
-    <td>
+    <td data-label="Employee">
       <div class="flex items-center gap-3">
         <div class="avatar">${(e.name||'E').charAt(0)}</div>
         <div><div class="font-medium">${e.name||'—'}</div><div class="text-xs text-muted">@${e.username}</div></div>
       </div>
     </td>
-    <td><div class="text-sm">${e.email||'—'}</div></td>
-    <td><div class="badge badge-neutral">${e.department||'General'}</div></td>
-    <td><div class="flex gap-2">
+    <td data-label="Email"><div class="text-sm">${e.email||'—'}</div></td>
+    <td data-label="Department"><div class="badge badge-neutral">${e.department||'General'}</div></td>
+    <td data-label="Actions"><div class="flex gap-2">
       <button class="btn btn-secondary btn-icon" onclick="openEditEmployeeModal('${e.id}')" title="Edit"><i data-lucide="edit-2"></i></button>
       <button class="btn btn-ghost btn-icon" onclick="deleteEmployee('${e.id}','${e.name}')" title="Delete" style="color:var(--danger)"><i data-lucide="trash-2"></i></button>
     </div></td></tr>`).join('');
@@ -790,10 +790,10 @@ async function renderGuardHome(el) {
           const time = isOut ? v.checkOutTime : v.checkInTime;
           const event = isOut ? '<span class="badge badge-neutral">Checked Out</span>' : '<span class="badge badge-info">Checked In</span>';
           return `<tr>
-            <td class="text-xs font-mono">${fmtDate(time).split(' · ')[1]}</td>
-            <td><div class="font-medium text-sm">${v.fullName}</div></td>
-            <td>${event}</td>
-            <td class="text-xs text-muted">Gate Staff</td>
+            <td data-label="Time" class="text-xs font-mono">${fmtDate(time).split(' · ')[1]}</td>
+            <td data-label="Visitor"><div class="font-medium text-sm">${v.fullName}</div></td>
+            <td data-label="Event">${event}</td>
+            <td data-label="Action By" class="text-xs text-muted">Gate Staff</td>
           </tr>`;
         }).join('')}</tbody>
       </table>`;
@@ -888,7 +888,7 @@ function renderGuardScan(el) {
       <button class="btn btn-secondary" onclick="stopQrCamera();navigateTo('guard-home')"><i data-lucide="arrow-left"></i> Back</button>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:900px">
+    <div class="grid grid-2 gap-6" style="max-width:900px">
       <div class="card">
         <div class="card-header"><span class="card-title">Camera Scanner</span></div>
         <div style="position:relative;width:100%;background:#0a0a12;border-radius:var(--radius-md);overflow:hidden;aspect-ratio:1">

@@ -133,23 +133,29 @@ function buildSidebar(role, activePage) {
   const roleLabel = (role || '').replace('ROLE_', '').replace('_', ' ').toLowerCase();
 
   const sidebarEl = document.getElementById('sidebar');
-  if (!sidebarEl) return;
-  sidebarEl.innerHTML = `
-    <div class="sidebar-header">
-      <div class="sidebar-brand-icon"><i data-lucide="shield-check" style="width:14px;height:14px"></i></div>
-      <div class="sidebar-brand">VMS</div>
-    </div>
-    <nav class="sidebar-nav">${navItems}</nav>
-    <div class="sidebar-footer">
-      <div class="user-profile-btn" onclick="logout()" title="Sign Out">
-        <div class="avatar">${initials}</div>
-        <div class="user-info">
-          <div class="user-name">${Auth.getName()}</div>
-          <div class="user-role">${roleLabel}</div>
-        </div>
-        <i data-lucide="log-out" style="margin-left:auto;width:14px;color:var(--text-tertiary)"></i>
+  if (sidebarEl) {
+    sidebarEl.innerHTML = `
+      <div class="sidebar-header">
+        <div class="sidebar-brand-icon"><i data-lucide="shield-check" style="width:14px;height:14px"></i></div>
+        <div class="sidebar-brand">VMS</div>
       </div>
-    </div>`;
+      <nav class="sidebar-nav">${navItems}</nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-btn" onclick="logout()" title="Sign Out">
+          <div class="avatar">${initials}</div>
+          <div class="user-info">
+            <div class="user-name">${Auth.getName()}</div>
+            <div class="user-role">${roleLabel}</div>
+          </div>
+          <i data-lucide="log-out" style="margin-left:auto;width:14px;color:var(--text-tertiary)"></i>
+        </div>
+      </div>`;
+  }
+    
+  const mobileNavEl = document.getElementById('mobileNav');
+  if (mobileNavEl) {
+    mobileNavEl.innerHTML = navItems;
+  }
     
   const headerAvatar = document.getElementById('headerAvatar');
   if (headerAvatar) headerAvatar.textContent = initials;
