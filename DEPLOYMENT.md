@@ -16,7 +16,7 @@ This app deploys as one Spring Boot web service. The frontend in `frontend/` is 
    - `CLOUDINARY_API_SECRET`
 4. Deploy the service.
 
-If your production database is empty, you can temporarily set `VMS_SEED_ENABLED=true` for the first deploy to create the admin user, then remove it immediately. The seeder clears existing users before inserting the admin user, so keep it off for real production data.
+On startup, the app removes old demo users such as `admin`, `guard1`, and the sample employees, then creates or updates the admin account as `Ansh` / `Ansh@2004`.
 
 ## Local production build
 
