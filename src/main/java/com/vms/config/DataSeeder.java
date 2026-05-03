@@ -29,9 +29,9 @@ public class DataSeeder implements CommandLineRunner {
 
         // ── Admin ──────────────────────────────────────────
         User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword(passwordEncoder.encode("admin123"));
-        admin.setName("Admin User");
+        admin.setUsername("Ansh");
+        admin.setPassword(passwordEncoder.encode("Ansh@2004"));
+        admin.setName("Ansh");
         admin.setEmail("admin@vms.com");
         admin.setDepartment("Administration");
         admin.setRole(Role.ADMIN);

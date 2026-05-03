@@ -140,12 +140,6 @@
           <button onclick="openVisitorLogin()" class="w-full bg-surface hover:bg-gray-800 border border-gray-700 text-gray-300 font-medium rounded-md px-4 py-2.5 transition-colors text-xs mb-5 flex items-center justify-center gap-2">
             <i data-lucide="user" class="w-3.5 h-3.5"></i> Visitor Portal Access
           </button>
-          
-          <div class="flex justify-center gap-3">
-            <button onclick="fillCreds('admin','admin123')" class="text-gray-500 hover:text-gray-300 text-[11px] transition-colors">Test Admin</button>
-            <span class="text-gray-700 text-[11px]">•</span>
-            <button onclick="fillCreds('amit.sharma','emp123')" class="text-gray-500 hover:text-gray-300 text-[11px] transition-colors">Test Employee</button>
-          </div>
         </div>
 
       </div>
@@ -209,11 +203,5 @@
   <script src="ui.js"></script>
   <script src="public.js"></script>
   <script src="app.js"></script>
-  <script>
-    function fillCreds(u, p) {
-      document.getElementById('username').value = u;
-      document.getElementById('password').value = p;
-    }
-  </script>
 </body>
 </html>
