@@ -441,17 +441,24 @@ function renderRegister(el) {
    ═══════════════════════════════════════════════════════════ */
 async function renderEmployees(el) {
   el.innerHTML = `
-    <div class="page-header">
-      <div><h2 class="page-title">Directory</h2><p class="page-subtitle">Manage company employees and hosts</p></div>
-      <button class="btn btn-primary" onclick="openAddEmployeeModal()"><i data-lucide="user-plus"></i> Add Employee</button>
-    </div>
-    <div class="table-container">
-      <div class="table-toolbar">
-        <div class="header-search"><i data-lucide="search"></i><input type="text" id="empSearch" placeholder="Search employees..."></div>
+    <section class="page page--directory" aria-labelledby="directory-heading">
+      <header class="page-header page-header--split">
+        <div class="page-header__intro">
+          <h2 id="directory-heading" class="page-title">Directory</h2>
+          <p class="page-subtitle">Manage company employees and hosts</p>
+        </div>
+        <button type="button" class="btn btn-primary btn--cta" onclick="openAddEmployeeModal()"><i data-lucide="user-plus"></i> Add Employee</button>
+      </header>
+      <div class="panel panel--directory">
+        <div class="toolbar toolbar--directory">
+          <div class="header-search header-search--toolbar"><i data-lucide="search"></i><input type="search" id="empSearch" placeholder="Search by name or email..." autocomplete="off"></div>
+        </div>
+        <div class="panel__body">
+          <div id="employeesTable" class="emp-table-host">${showLoader()}</div>
+          <div id="empPagination" class="emp-pagination"></div>
+        </div>
       </div>
-      <div class="table-wrapper"><div id="employeesTable">${showLoader()}</div></div>
-      <div id="empPagination"></div>
-    </div>`;
+    </section>`;
   lucide.createIcons({ root: el });
   await loadEmployees();
   document.getElementById('empSearch').addEventListener('input', () => { empPage = 1; filterAndRenderEmployees(); });
@@ -468,21 +475,26 @@ function filterAndRenderEmployees() {
   if (search) filtered = filtered.filter(e => (e.name||'').toLowerCase().includes(search) || (e.email||'').toLowerCase().includes(search));
 
   const { data, page, total } = paginate(filtered, empPage, 10);
-  const tbody = data.map(e => `<tr>
-    <td data-label="Employee">
-      <div class="flex items-center gap-3">
-        <div class="avatar">${(e.name||'E').charAt(0)}</div>
-        <div><div class="font-medium">${e.name||'—'}</div><div class="text-xs text-muted">@${e.username}</div></div>
+  const cards = data.map(e => `
+    <article class="emp-card" data-employee-id="${e.id}">
+      <div class="emp-card__lead">
+        <div class="avatar emp-card__avatar">${(e.name||'E').charAt(0)}</div>
+        <div class="emp-card__identity">
+          <div class="emp-card__name">${e.name||'—'}</div>
+          <div class="emp-card__handle">@${e.username}</div>
+        </div>
       </div>
-    </td>
-    <td data-label="Email"><div class="text-sm">${e.email||'—'}</div></td>
-    <td data-label="Department"><div class="badge badge-neutral">${e.department||'General'}</div></td>
-    <td data-label="Actions"><div class="flex gap-2">
-      <button class="btn btn-secondary btn-icon" onclick="openEditEmployeeModal('${e.id}')" title="Edit"><i data-lucide="edit-2"></i></button>
-      <button class="btn btn-ghost btn-icon" onclick="deleteEmployee('${e.id}','${e.name}')" title="Delete" style="color:var(--danger)"><i data-lucide="trash-2"></i></button>
-    </div></td></tr>`).join('');
+      <div class="emp-card__meta">
+        <div class="emp-card__email text-sm">${e.email||'—'}</div>
+        <span class="badge badge-neutral">${e.department||'General'}</span>
+      </div>
+      <div class="emp-card__actions">
+        <button type="button" class="icon-btn icon-btn--surface" onclick="openEditEmployeeModal('${e.id}')" title="Edit employee" aria-label="Edit"><i data-lucide="pencil"></i></button>
+        <button type="button" class="icon-btn icon-btn--danger" onclick="deleteEmployee('${e.id}','${(e.name||'').replace(/'/g, "\\'")}')" title="Delete employee" aria-label="Delete"><i data-lucide="trash-2"></i></button>
+      </div>
+    </article>`).join('');
 
-  safeSetHTML('employeesTable', data.length === 0 ? '<p class="table-empty">No employees found.</p>' : `<table><thead><tr><th>Employee</th><th>Email</th><th>Department</th><th>Actions</th></tr></thead><tbody>${tbody}</tbody></table>`);
+  safeSetHTML('employeesTable', data.length === 0 ? '<p class="table-empty emp-empty" role="status">No employees found.</p>' : `<div class="emp-list">${cards}</div>`);
   safeSetHTML('empPagination', renderPagination(page, total, 'goEmpPage'));
   lucide.createIcons({ root: document.getElementById('employeesTable') });
 }
