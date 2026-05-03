@@ -482,7 +482,18 @@ function empFormHtml(emp = {}) {
     <div class="form-group"><label>Email</label><input type="email" class="form-input" name="email" required value="${emp.email||''}"></div>
     <div class="grid grid-2 gap-4">
       <div class="form-group"><label>Username</label><input class="form-input" name="username" required value="${emp.username||''}" ${emp.id?'readonly style="opacity:0.5"':''}></div>
-      <div class="form-group"><label>Department</label><input class="form-input" name="department" value="${emp.department||''}"></div>
+      <div class="form-group">
+        <label>Department</label>
+        <select class="form-select" name="department">
+          <option value="Administration" ${emp.department==='Administration'?'selected':''}>Administration</option>
+          <option value="HR" ${emp.department==='HR'?'selected':''}>HR</option>
+          <option value="Engineering" ${emp.department==='Engineering'?'selected':''}>Engineering</option>
+          <option value="Security" ${emp.department==='Security'?'selected':''}>Security</option>
+          <option value="Sales" ${emp.department==='Sales'?'selected':''}>Sales</option>
+          <option value="Marketing" ${emp.department==='Marketing'?'selected':''}>Marketing</option>
+          <option value="Facilities" ${emp.department==='Facilities'?'selected':''}>Facilities</option>
+        </select>
+      </div>
     </div>
     <div class="form-group"><label>${emp.id?'New Password (optional)':'Password'}</label><input type="password" class="form-input" name="password" ${emp.id?'':'required'}></div>
     <div class="modal-footer" style="margin:-1.5rem;margin-top:0.5rem">
@@ -642,36 +653,52 @@ async function empApproveVisitRequest(requestId, approve) {
    ═══════════════════════════════════════════════════════════ */
 async function renderGuardHome(el) {
   el.innerHTML = `
-    <div class="page-header">
-      <div><h2 class="page-title">Security Portal</h2><p class="page-subtitle">Gate Check-in &amp; Check-out Management</p></div>
+    <div class="page-header guard-terminal-header">
+      <div class="flex items-center gap-4">
+        <div class="terminal-icon"><i data-lucide="shield-check"></i></div>
+        <div>
+          <h2 class="page-title">Security Terminal</h2>
+          <p class="page-subtitle">Gate Management & Access Control</p>
+        </div>
+      </div>
       <div class="flex gap-2">
-        <button class="btn btn-secondary" onclick="navigateTo('guard-scan')"><i data-lucide="scan-qr-code"></i> Scan QR</button>
-        <button class="btn btn-primary" onclick="navigateTo('register')"><i data-lucide="user-plus"></i> Walk-in</button>
+        <button class="btn btn-primary btn-lg" onclick="navigateTo('guard-scan')">
+          <i data-lucide="scan-line"></i> Scan QR Pass
+        </button>
+        <button class="btn btn-secondary btn-lg" onclick="navigateTo('register')">
+          <i data-lucide="user-plus"></i> Manual Entry
+        </button>
       </div>
     </div>
 
     <div class="grid gap-4" style="grid-template-columns:repeat(3,1fr);margin-bottom:1.5rem" id="guardStats"></div>
 
-    <div class="card" style="margin-bottom:1.5rem">
-      <div class="card-header"><span class="card-title">Manual Visitor Search</span><span class="text-muted text-xs">Find visitor by name or email</span></div>
-      <div class="flex gap-3" style="padding:0 0 1rem">
-        <div class="header-search" style="flex:1">
+    <div class="card terminal-card" style="margin-bottom:1.5rem; border-left: 4px solid var(--primary);">
+      <div class="card-header"><span class="card-title">Quick Search</span><span class="text-muted text-xs">Lookup visitor by name, email or phone</span></div>
+      <div class="flex gap-3" style="padding:0.5rem 0 1rem">
+        <div class="header-search terminal-search" style="flex:1">
           <i data-lucide="search"></i>
-          <input type="text" id="guardSearch" placeholder="Search by name, email..." autocomplete="off">
+          <input type="text" id="guardSearch" placeholder="Type name, email or phone number..." autocomplete="off" style="font-size:1.1rem; padding:0.75rem 1rem 0.75rem 2.75rem">
         </div>
-        <button class="btn btn-secondary" id="guardSearchBtn" onclick="guardDoSearch()">Search</button>
+        <button class="btn btn-primary" id="guardSearchBtn" onclick="guardDoSearch()" style="padding:0 2rem">Search</button>
       </div>
       <div id="guardSearchResults"></div>
     </div>
 
     <div class="grid grid-2 gap-6">
-      <div class="card">
-        <div class="card-header"><span class="card-title">Expected Arrivals</span><span class="badge badge-warning" id="expectedCount">0</span></div>
-        <div id="guardExpected" class="flex-col gap-2"></div>
+      <div class="card terminal-list-card">
+        <div class="card-header" style="background:var(--bg-surface-raised)">
+          <div class="flex items-center gap-2"><i data-lucide="calendar-clock" class="text-warning"></i><span class="card-title">Expected Today</span></div>
+          <span class="badge badge-warning" id="expectedCount">0</span>
+        </div>
+        <div id="guardExpected" class="flex-col gap-2" style="padding:0.5rem"></div>
       </div>
-      <div class="card">
-        <div class="card-header"><span class="card-title">Currently On Premises</span><span class="badge badge-info" id="checkedInCount">0</span></div>
-        <div id="guardCheckedIn" class="flex-col gap-2"></div>
+      <div class="card terminal-list-card">
+        <div class="card-header" style="background:var(--bg-surface-raised)">
+          <div class="flex items-center gap-2"><i data-lucide="home" class="text-info"></i><span class="card-title">Active Visitors</span></div>
+          <span class="badge badge-info" id="checkedInCount">0</span>
+        </div>
+        <div id="guardCheckedIn" class="flex-col gap-2" style="padding:0.5rem"></div>
       </div>
     </div>`;
 

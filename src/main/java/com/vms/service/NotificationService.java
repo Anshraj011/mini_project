@@ -6,6 +6,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import org.springframework.scheduling.annotation.Async;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -13,6 +15,7 @@ public class NotificationService {
 
     private final JavaMailSender mailSender;
 
+    @Async
     public void sendOtpEmail(String to, String otp) {
         log.info("Preparing to send OTP to: {}", to);
         String subject = "Your VMS Login OTP";
@@ -34,6 +37,7 @@ public class NotificationService {
         }
     }
 
+    @Async
     public void sendEmail(String to, String subject, String body) {
         log.info("Sending email to: {}", to);
         try {

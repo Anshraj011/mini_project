@@ -337,3 +337,36 @@ tbody tr:hover { background: var(--bg-surface-raised); }
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+
+/* -- Guard Terminal Enhancements ------------------------- */
+.guard-terminal-header {
+  background: var(--bg-surface-raised);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-strong);
+  margin-bottom: 2rem;
+}
+.terminal-icon {
+  width: 56px;
+  height: 56px;
+  background: var(--accent-base);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.terminal-icon i { width: 28px; height: 28px; }
+
+.terminal-card { border-left: 4px solid var(--accent-base) !important; }
+.terminal-search { background: var(--bg-app) !important; border-width: 2px !important; }
+.terminal-search:focus-within { border-color: var(--accent-base) !important; }
+
+.terminal-list-card { height: 100%; border: 1px solid var(--border-strong); }
+.terminal-list-card .card-header { margin-bottom: 0; padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border-default); }
+
+@media (max-width: 768px) {
+  .guard-terminal-header { padding: 1rem; }
+  .terminal-icon { width: 40px; height: 40px; }
+  .terminal-icon i { width: 20px; height: 20px; }
+}
