@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VMS — Sign In</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: '#0B1020',
+            surface: '#111827',
+            primary: '#6366F1',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.4s ease-out forwards',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body.landing-body { background-color: #0B1020 !important; min-height: 100vh; margin: 0; display: block; }
+    
+    #visitorLoginOverlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #visitorLoginOverlay.open #visitorModalContent {
+      transform: scale(1);
+      opacity: 1;
+    }
+    
+    /* Modern input autofill override */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active{
+      -webkit-box-shadow: 0 0 0 30px #0B1020 inset !important;
+      -webkit-text-fill-color: white !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  </style>
+</head>
+<body class="landing-body font-sans text-white overflow-x-hidden antialiased">
+
+  <div class="flex flex-col md:flex-row min-h-screen relative w-full">
+    
+    <!-- LEFT SIDE: Minimal Hero Section -->
+    <div class="w-full md:w-[55%] flex flex-col justify-center px-8 py-12 md:px-16 lg:px-24 min-h-screen bg-dark">
+      
+      <div class="animate-fade-in" style="animation-delay: 0.1s; opacity: 0;">
+        <div class="flex items-center gap-2 mb-10">
+          <i data-lucide="shield-check" class="w-6 h-6 text-primary"></i>
+          <span class="text-lg font-semibold tracking-tight text-white">VMS</span>
+        </div>
+
+        <h1 class="text-3xl md:text-4xl font-semibold leading-tight tracking-tight mb-4 text-white">
+          Visitor Management Simplified
+        </h1>
+        <p class="text-gray-400 mb-10 text-sm leading-relaxed max-w-md">
+          Secure, seamless, and intelligent visitor tracking built for modern enterprise environments.
+        </p>
+
+
+
+        <!-- Minimal Feature Rows -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <i data-lucide="check" class="w-4 h-4 text-primary"></i>
+            <span class="text-sm text-gray-300">Visitor Tracking</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <i data-lucide="check" class="w-4 h-4 text-primary"></i>
+            <span class="text-sm text-gray-300">Access Management</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <i data-lucide="check" class="w-4 h-4 text-primary"></i>
+            <span class="text-sm text-gray-300">Audit Logs</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE: Compact Login Section -->
+    <div class="w-full md:w-[45%] bg-surface flex flex-col items-center justify-center p-6 sm:p-8 md:p-12 min-h-screen border-l border-gray-800 relative z-20">
+      
+      <div class="w-full max-w-[360px] animate-fade-in" style="animation-delay: 0.2s; opacity: 0;">
+        
+        <div class="mb-8">
+          <h2 class="text-xl font-semibold text-white mb-1">Sign in</h2>
+          <p class="text-gray-400 text-sm">Welcome back to your dashboard</p>
+        </div>
+
+        <div id="loginAlert" class="hidden mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-md text-red-400 text-xs flex items-center gap-2"></div>
+
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1.5">Username</label>
+            <input type="text" id="username" class="w-full bg-dark border border-gray-700 rounded-md px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors shadow-sm" placeholder="Enter username" required autocomplete="username">
+          </div>
+          
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1.5">Password</label>
+            <input type="password" id="password" class="w-full bg-dark border border-gray-700 rounded-md px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors shadow-sm" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+
+          <div class="flex items-center justify-between pt-1 pb-2">
+            <label class="flex items-center gap-2 cursor-pointer group">
+              <input type="checkbox" class="w-3.5 h-3.5 rounded border-gray-700 bg-dark text-primary focus:ring-primary/50 focus:ring-offset-0 cursor-pointer">
+              <span class="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">Remember me</span>
+            </label>
+            <a href="#" class="text-xs text-primary hover:text-primary/80 transition-colors">Forgot password?</a>
+          </div>
+
+          <button type="submit" id="loginBtn" class="w-full bg-primary text-white font-medium text-sm rounded-md px-4 py-2.5 shadow-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 mt-2">
+            <span id="loginBtnText">Sign In</span>
+            <div id="loginSpinner" class="hidden w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          </button>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-gray-800">
+          <button onclick="openRequestVisitModal()" class="w-full bg-primary hover:bg-primary/90 text-white font-medium rounded-md px-4 py-2.5 transition-colors text-xs mb-3 flex items-center justify-center gap-2">
+            <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i> Request a Visit
+          </button>
+          <button onclick="openVisitorLogin()" class="w-full bg-surface hover:bg-gray-800 border border-gray-700 text-gray-300 font-medium rounded-md px-4 py-2.5 transition-colors text-xs mb-5 flex items-center justify-center gap-2">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i> Visitor Portal Access
+          </button>
+          
+          <div class="flex justify-center gap-3">
+            <button onclick="fillCreds('admin','admin123')" class="text-gray-500 hover:text-gray-300 text-[11px] transition-colors">Test Admin</button>
+            <span class="text-gray-700 text-[11px]">•</span>
+            <button onclick="fillCreds('amit.sharma','emp123')" class="text-gray-500 hover:text-gray-300 text-[11px] transition-colors">Test Employee</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Visitor Auth Overlay -->
+  <div id="visitorLoginOverlay" class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-surface border border-gray-700 w-full max-w-[360px] rounded-lg p-6 shadow-xl transform scale-95 opacity-0 transition-all duration-200" id="visitorModalContent">
+      
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h3 class="text-lg font-semibold text-white">Visitor Portal</h3>
+          <p class="text-xs text-gray-400 mt-1">Access your digital pass via email OTP</p>
+        </div>
+        <button onclick="closeVisitorLogin()" class="text-gray-400 hover:text-white transition-colors p-1 rounded hover:bg-gray-800"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      
+      <div id="vLoginAlert" class="hidden mb-5 p-3 bg-red-500/10 border border-red-500/20 rounded-md text-red-400 text-xs flex items-center gap-2"></div>
+
+      <form id="otpSendForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-gray-400 mb-1.5">Email Address</label>
+          <input type="email" id="vEmail" class="w-full bg-dark border border-gray-700 rounded-md px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors shadow-sm" placeholder="name@company.com" required>
+        </div>
+        <button type="submit" id="sendOtpBtn" class="w-full bg-white text-dark font-medium text-sm rounded-md px-4 py-2.5 shadow-sm hover:bg-gray-200 transition-colors">Send Code</button>
+      </form>
+
+      <form id="otpVerifyForm" class="hidden space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-gray-400 mb-1.5">Enter 6-digit Code</label>
+          <input type="text" id="vOtp" class="w-full bg-dark border border-gray-700 rounded-md px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors shadow-sm text-center tracking-[0.3em] font-mono" placeholder="000000" required>
+        </div>
+        <button type="submit" id="verifyOtpBtn" class="w-full bg-primary text-white font-medium text-sm rounded-md px-4 py-2.5 shadow-sm hover:bg-primary/90 transition-colors">Verify & Access Pass</button>
+        <button type="button" onclick="showOtpSend()" class="w-full text-xs text-gray-400 hover:text-white transition-colors">Use different email</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle"></h3>
+        <button class="icon-btn" onclick="closeModal()"><i data-lucide="x"></i></button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script>
+    lucide.createIcons();
+    setTimeout(() => {
+      document.querySelectorAll('.animate-fade-in').forEach(el => {
+        el.style.animationPlayState = 'running';
+      });
+    }, 50);
+  </script>
+  <script src="api.js"></script>
+  <script src="ui.js"></script>
+  <script src="public.js"></script>
+  <script src="app.js"></script>
+  <script>
+    function fillCreds(u, p) {
+      document.getElementById('username').value = u;
+      document.getElementById('password').value = p;
+    }
+  </script>
+</body>
+</html>
