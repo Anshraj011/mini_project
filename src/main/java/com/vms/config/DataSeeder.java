@@ -36,13 +36,13 @@ public class DataSeeder implements CommandLineRunner {
         log.info("Running admin bootstrap...");
 
         LEGACY_DEMO_USERS.forEach(username ->
-                userRepository.findByUsername(username).ifPresent(user -> {
+                userRepository.findAllByUsername(username).forEach(user -> {
                     userRepository.delete(user);
                     log.info("Removed legacy demo user: {}", username);
                 })
         );
 
-        User admin = userRepository.findByUsername(ADMIN_USERNAME).orElseGet(User::new);
+        User admin = userRepository.findFirstByUsername(ADMIN_USERNAME).orElseGet(User::new);
         admin.setUsername(ADMIN_USERNAME);
         admin.setPassword(passwordEncoder.encode(ADMIN_PASSWORD));
         admin.setName("Ansh");
